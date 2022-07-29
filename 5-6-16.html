@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--
+Step 1: Create the card information
+	Step A: Create the array
+	Step B: Assign numbers to the array
+	Step C: Shuffle the numbers in the array
+Step 2: Generate the cards
+	Step A: Create a container 
+	Step B: Create a loop to generate each card
+	Step c: Build the cards and inject array information
+	Step D: Display the cards
+Step 3: Style the cards
+	Step A: Add size and the background
+	Step B: Add transform and transitions to front and back
+	Step C: For testing purposes only - add hover effect to the cards
+	Step D: Set the container size
+Step 4: Flip the cards when we click on them
+	Step A: Remove the hover for testing purposes
+	Step B: Add an event handler for when we click on the front card
+	Step C: Create function to handle event
+Step 5: Flip only two cards
+	Step A: Create counter variable
+	Step B: Increase counter on flipCard
+	Step C: If the count id more than two flip the cards back
+		Step C.1: Create a variable for all the front cards (array)
+		Step C.2: Use a for loop to go through all the front cards
+		Step C.3: Change each front card back to 0deg
+		Step C.4: Change each back card back to 180deg
+	Step D: Reset count to 1
+Step 6: Check to see if cards match
+	Step A: Create a variable to store the first card
+	Step B: In flipCard, assign card1 the value of the current card
+-->
+<html>
+	<head>
+		<title></title>
+		<style>
+			*{
+				transition:1.3s;
+				font-family:"Arial";
+			}
+			#container{
+				width:417px;
+				height:417px;
+				margin:0 auto;
+				background-attachment:fixed;
+				background-image:url("https://i.ytimg.com/vi/MveqXxB12YA/hqdefault.jpg");
+			}
+			.card{
+				width:100px;
+				height:100px;
+				float:left;
+				margin:2px;
+				cursor: pointer;
+			}
+			.front{
+				position:absolute;
+				width:100px;
+				height:100px;
+				background-color:black;
+				transform:rotateY(0deg);
+				backface-visibility:hidden;
+				<!--<background-image:url("http://ih0.redbubble.net/image.105650299.1245/flat,800x800,075,f.jpg");
+				background-image:url("http://png.clipart.me/graphics/previews/949/playing-card-design-square_94989685.jpg");
+				background-position:center;
+				background-attachment:fixed;-->
+			}
+			.back{
+				position:absolute;
+				width:100px;
+				height:100px;
+				background-color:grey;
+				transform:rotateY(180deg);
+				backface-visibility:hidden;
+				font-size:40pt;
+				text-align:center;
+				color: white;
+			}
+			img{
+				
+			}
+		</style>
+		<script>
+			var array = [];
+			var count = 0;
+			var firstcard;
+			//var picture;
+			var attempts = 0;
+			
+			function fillArray(){
+				for(i = 0; i < 8; i++){
+					array.push(i);
+					array.push(i);
+				}
+			}
+			function shuffleArray(){
+				var pos1, pos2, tmp;
+				for(i = 0; i < 200; i++){
+					pos1 = Math.floor(Math.random()*array.length);
+					pos2 = Math.floor(Math.random()*array.length);
+					tmp = array[pos1];
+					array[pos1] = array[pos2];
+					array[pos2] = tmp;
+				}
+			}
+			function generateCards(){
+				build = "";
+				for(i = 0; i < array.length; i++){
+					build += "<div class='card'>";
+					build += "	<div class='front' onclick='flipCard(this);attempts()'>";
+					build += "	</div>";
+					build += "	<div class='back'>" + array[i];
+					build += "	</div>";
+					build += "</div>";
+				}
+				document.getElementById("container").innerHTML = build;
+			}
+			function init(){
+				fillArray();
+				shuffleArray();
+				generateCards();
+				//randPic();
+			}
+			function flipCard(currentcard){
+				count ++;
+				if(count == 2){
+					var value1 = firstcard.nextSibling.nextElementSibling.innerHTML;
+					var value2 = currentcard.nextSibling.nextElementSibling.innerHTML;
+					if(value1 == value2){
+						firstcard.style.visibility = "hidden";
+						firstcard.nextSibling.nextElementSibling.style.visibility = "hidden";
+						currentcard.style.visibility = "hidden";
+						currentcard.nextSibling.nextElementSibling.style.visibility = "hidden";
+					}
+				}
+				firstcard = currentcard;
+				console.log(count);
+				if(count > 2){
+					flipCardsBack();
+					count = 1;
+				}
+				currentcard.style.transform = "rotateY(180deg)";
+				currentcard.nextSibling.nextElementSibling.style.transform = "rotateY(0deg)";
+			}
+			function flipCardsBack(){
+				frontCards = document.querySelectorAll(".front");
+				for(i = 0; i < frontCards.length; i++){
+					frontCards[i].style.transform = "rotateY(0deg)";
+					frontCards[i].nextSibling.nextElementSibling.style.transform = "rotateY(180deg)";
+				}
+			}
+			function attempts(){
+				if(count == 3){
+					attempts += 1;
+				}
+				document.getElementById("attempts").innerHTML = "Attempts:" + attempts;
+			}
+			/*function randPic(){
+				r = Math.floor(Math.random()* 3);
+				if(r == 1){
+					picture = "https://i.ytimg.com/vi/MveqXxB12YA/hqdefault.jpg";
+					document.getElementById("container").style.backgroundImage = url(picture);
+				}else if(r == 2){
+					picture = "http://www.startlandnews.com/wp-content/uploads/2016/01/5908001532_9ba7e5f180_o.jpg";
+					document.getElementById("container").style.backgroundImage = url(picture);
+				}else{
+					picture = "http://vignette4.wikia.nocookie.net/bakugan/images/d/dc/Troll_face.png/revision/latest?cb=20110718113336";
+					document.getElementById("container").style.backgroundImage = url(picture);
+				}
+			}*/
+		</script>
+	</head>
+	<body onload="init()">
+		<div id="attempts"></div>
+		<div id="container"></div>
+	</body>
+</html>
